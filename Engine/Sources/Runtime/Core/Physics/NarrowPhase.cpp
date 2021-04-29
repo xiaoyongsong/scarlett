@@ -838,14 +838,32 @@ struct EPA
 ////////////////////////////////////////////// EPA //////////////////////
 
 /*
+更新manifolds中所有碰撞点。
+由于上一帧的intergratePhase阶段的作用，部分穿透点已经脱离穿透，需要移除
+判断方法是利用记录的穿透点在局部空间中的位置，重新计算全局空间，然后判断与碰撞法线的点积
+*/
+void scarlett::NarrowPhaseGJKEPA::UpdateManifolds(std::vector<std::shared_ptr<ContactManifold>>& manifolds)
+{
+
+}
+
+
+
+/*
 rigidBodiesPairs 所有可能发生碰撞的刚体对
 collisions 实际的碰撞结果
+如果AB的manifold碰撞点已经满了，而且需要增加一个碰撞点，需要选择放弃一个。
+https://github.com/darktemplar216/PhysicsTest_Chapter2/blob/master/TestFreeLicense/Physics/ContactReport.cpp
+RearrengeContactPoints
+
 */
-void scarlett::NarrowPhaseGJKEPA::CollideDetection(std::vector<RigidBodyPair>& rigidBodiesPairs, std::vector<std::shared_ptr<ContactManifold>>& collisions)
+void scarlett::NarrowPhaseGJKEPA::CollideDetection(std::vector<RigidBodyPair>& rigidBodiesPairs, std::vector<std::shared_ptr<ContactManifold>>& manifolds)
 {
 	for each (RigidBodyPair pair in rigidBodiesPairs)
 	{
+		// A物体的坐标
 		Vector3f position1 = pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
+		// B物体的左边
 		Vector3f position2 = pair.second->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
 		Vector3f guess = position1 - position2;
 		sResults result;
@@ -871,7 +889,7 @@ void scarlett::NarrowPhaseGJKEPA::CollideDetection(std::vector<RigidBodyPair>& r
 			manifold->contactPoints[0] = point;
 			manifold->contactPointCount = 1;
 
-			collisions.push_back(manifold);
+			manifolds.push_back(manifold);
 		}
 	}
 

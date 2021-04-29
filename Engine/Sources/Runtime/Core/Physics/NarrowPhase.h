@@ -13,6 +13,7 @@ namespace scarlett
 	class INarrowPhase
 	{
 	public:
+		virtual void UpdateManifolds(std::vector<std::shared_ptr<ContactManifold>>& collisions) = 0;
 		virtual void CollideDetection(std::vector<RigidBodyPair>& rigidBodies, std::vector<std::shared_ptr<ContactManifold>>& collisions) = 0;
 
 	};
@@ -47,7 +48,7 @@ namespace scarlett
 
 	class NarrowPhaseGJKEPA: public INarrowPhase
 	{
-
+		virtual void UpdateManifolds(std::vector<std::shared_ptr<ContactManifold>>& collisions);
 		virtual void CollideDetection(std::vector<RigidBodyPair>& rigidBodies, std::vector<std::shared_ptr<ContactManifold>>&);
 
 		void InitializeMinkowskiDiff(RigidBodyPair& pair, sResults& result, MinkowskiDiff& diff);
