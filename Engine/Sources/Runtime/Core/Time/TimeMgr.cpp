@@ -11,6 +11,7 @@ int scarlett::TimeMgr::Initialize() noexcept
 	m_bFirstUpdate = true;
 	m_startTime = m_LastStatisticTime = std::chrono::high_resolution_clock::now();
 	m_frameCount = 0;
+
 	return 0;
 }
 
